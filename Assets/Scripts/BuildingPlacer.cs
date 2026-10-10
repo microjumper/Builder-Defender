@@ -5,8 +5,10 @@ using UnityEngine.InputSystem.Controls;
 public class BuildingPlacer : MonoBehaviour
 {
     [SerializeField] private BuildingRegistry buildingRegistry;
+    [SerializeField] private GameObject buildingPrefab;
 
     private Camera mainCamera;
+    private BuildingData currentBuilding;
 
     private void Awake()
     {
@@ -20,8 +22,14 @@ public class BuildingPlacer : MonoBehaviour
             Vector2 screenPosition = Mouse.current.position.ReadValue();
             Vector2 worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
 
-            Debug.Log("Left click detected at: " + screenPosition);
-            Debug.Log("Screen to World Position: " + worldPosition);
+            if (currentBuilding == null)
+            {
+                Debug.LogWarning("No building selected. Please select a building using the hotkeys.");
+                return;
+            }
+
+            var building = Instantiate(buildingPrefab, worldPosition, Quaternion.identity);
+            building.GetComponent<Building>().Initialize(currentBuilding);
         }
     }
 
@@ -35,10 +43,12 @@ public class BuildingPlacer : MonoBehaviour
 
                 if (buildingRegistry.BuildingsByHotkey.TryGetValue(hotkey, out var buildingData))
                 {
+                    currentBuilding = buildingData;
                     Debug.Log($"Hotkey '{hotkey}' selected: {buildingData.BuildingName}");
                 }
                 else
                 {
+                    currentBuilding = null;
                     Debug.Log($"No building assigned to hotkey '{hotkey}'.");
                 }
             }

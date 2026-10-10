@@ -22,8 +22,6 @@ public class BuildingRegistry : ScriptableObject
         {
             foreach (var building in buildings)
             {
-                if (building == null) continue;
-
                 if (!buildingsByHotkey.TryAdd(building.BuildingHotkey, building))
                 {
                     Debug.LogWarning($"Duplicate hotkey '{building.BuildingHotkey}' found for building '{building.BuildingName}'.");

@@ -468,6 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingPlacer
   buildingRegistry: {fileID: 11400000, guid: 5394b36a2940b0547b65a4d12eb79a48, type: 2}
+  buildingPrefab: {fileID: 6864141928507765935, guid: b95fbe391f1f60f4b9274a0802985091, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
