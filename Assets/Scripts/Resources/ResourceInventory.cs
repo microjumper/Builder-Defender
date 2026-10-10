@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ResourceInventory : MonoBehaviour
 {
-    public event Action<ResourceData, int> ResourceChanged;
-
+    [SerializeField] private ResourceAmoutChanged resourceAmountChanged;
     [SerializeField] private List<ResourceData> resourceDataList;
 
     private readonly Dictionary<ResourceData, int> amounts = new();
@@ -41,7 +40,7 @@ public class ResourceInventory : MonoBehaviour
         int newTotal = checked(GetAmount(resourceData) + amount);
 
         amounts[resourceData] = newTotal;
-        ResourceChanged?.Invoke(resourceData, newTotal);
+        resourceAmountChanged.RaiseEvent(new ResourceAmontPayload(resourceData, newTotal));
 
         return newTotal;
     }
@@ -69,7 +68,7 @@ public class ResourceInventory : MonoBehaviour
         int newTotal = currentAmount - amount;
         amounts[resourceData] = newTotal;
 
-        ResourceChanged?.Invoke(resourceData, newTotal);
+        resourceAmountChanged.RaiseEvent(new ResourceAmontPayload(resourceData, newTotal));
 
         return true;
     }

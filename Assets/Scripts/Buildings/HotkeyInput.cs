@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -7,7 +6,7 @@ public class HotkeyInput : MonoBehaviour
 {
     [SerializeField] private BuildingRegistry buildingRegistry;
 
-    public static event Action<BuildingData> BuildingSelected;
+    [SerializeField] private BuildingSelected buildingSelected;
 
     public void OnBuildingHotkey(InputAction.CallbackContext context)
     {
@@ -17,15 +16,13 @@ public class HotkeyInput : MonoBehaviour
 
             if (buildingRegistry.BuildingsByHotkey.TryGetValue(hotkey, out var buildingData))
             {
-                BuildingSelected?.Invoke(buildingData);
-
-                Debug.Log($"Hotkey '{hotkey}' selected: {buildingData.BuildingName}");
+                buildingSelected.RaiseEvent(buildingData);
             }
             else
             {
-                BuildingSelected?.Invoke(null);
+                buildingSelected.RaiseEvent(null);
 
-                Debug.Log($"No building assigned to hotkey '{hotkey}'.");
+                Debug.LogWarning($"No building assigned to hotkey '{hotkey}'.");
             }
         }
     }

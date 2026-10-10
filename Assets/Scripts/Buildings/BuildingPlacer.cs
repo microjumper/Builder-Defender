@@ -3,14 +3,15 @@ using UnityEngine.InputSystem;
 
 public class BuildingPlacer : MonoBehaviour
 {
+    [SerializeField] private BuildingSelected buildingSelected;
     private Camera mainCamera;
 
     private BuildingData currentBuilding;
 
     private void Start() => mainCamera = Camera.main;
 
-    private void OnEnable() => HotkeyInput.BuildingSelected += OnBuildingSelected;
-    private void OnDisable() => HotkeyInput.BuildingSelected -= OnBuildingSelected;
+    private void OnEnable() => buildingSelected.EventRaised += OnBuildingSelected;
+    private void OnDisable() => buildingSelected.EventRaised -= OnBuildingSelected;
 
     private void OnBuildingSelected(BuildingData buildingData) => currentBuilding = buildingData;
 
@@ -18,16 +19,17 @@ public class BuildingPlacer : MonoBehaviour
     {
         if (context.performed)
         {
-            Vector2 screenPosition = Mouse.current.position.ReadValue();
-            Vector2 worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
+            if (currentBuilding != null)
+            {
+                Vector2 screenPosition = Mouse.current.position.ReadValue();
+                Vector2 worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
 
-            if (currentBuilding == null)
+                BuildingFactory.Instance.CreateBuilding(currentBuilding, worldPosition);
+            }
+            else
             {
                 Debug.LogWarning("No building selected. Please select a building using the hotkeys.");
-                return;
             }
-
-            BuildingFactory.Instance.CreateBuilding(currentBuilding, worldPosition);
         }
     }
 }
