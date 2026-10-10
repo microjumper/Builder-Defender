@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class ResourceGenerator : MonoBehaviour
 {
+    private ResourceInventory resourceInventory;
     private ProductionData productionData;
 
     private float elapsedTime = 0f;
 
+    public void SetResourceInventory(ResourceInventory inventory) => resourceInventory = inventory;
     public void SetProductionData(ProductionData data) => productionData = data;
 
     private void Update()
@@ -25,6 +27,9 @@ public class ResourceGenerator : MonoBehaviour
 
     private void GenerateResource()
     {
-        Debug.Log($"Generated {productionData.ProductionPerSecond} of {productionData.ResourceData.ResourceName}");
+        if (resourceInventory != null)
+        {
+            resourceInventory.AddResource(productionData.ResourceData, productionData.ProductionPerSecond);
+        }
     }
 }
