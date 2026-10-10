@@ -10,7 +10,7 @@ public class BuildingPlacer : MonoBehaviour
     private Camera mainCamera;
     private BuildingData currentBuilding;
 
-    private void Awake()
+    private void Start()
     {
         mainCamera = Camera.main;
     }

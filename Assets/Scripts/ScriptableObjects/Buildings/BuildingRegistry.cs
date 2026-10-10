@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[CreateAssetMenu(fileName = "BuildingRegistry", menuName = "Scriptable Objects/BuildingRegistry")]
+[CreateAssetMenu(fileName = "BuildingRegistry", menuName = "Scriptable Objects/Buildings/BuildingRegistry")]
 public class BuildingRegistry : ScriptableObject
 {
     public IReadOnlyDictionary<Key, BuildingData> BuildingsByHotkey => buildingsByHotkey;
