@@ -13,7 +13,17 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true,
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "BuildingHotkey",
+                    "type": "Button",
+                    "id": "36f00a1d-b31d-4e6c-9415-86a736e2c704",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
                     "priority": 0
                 }
             ],
@@ -26,6 +36,28 @@
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7cc5bc46-93cc-473d-a998-65cdabdc8e9e",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BuildingHotkey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5806e701-a36f-4333-bed7-4fa21ffa553a",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "BuildingHotkey",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

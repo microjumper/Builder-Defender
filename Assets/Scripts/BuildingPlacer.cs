@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class BuildingPlacer : MonoBehaviour
 {
+    [SerializeField] private BuildingRegistry buildingRegistry;
+
     private Camera mainCamera;
 
     private void Awake()
@@ -19,6 +22,26 @@ public class BuildingPlacer : MonoBehaviour
 
             Debug.Log("Left click detected at: " + screenPosition);
             Debug.Log("Screen to World Position: " + worldPosition);
+        }
+    }
+
+    public void OnBuildingHotkey(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (context.control is KeyControl keyControl)
+            {
+                Key hotkey = keyControl.keyCode;
+
+                if (buildingRegistry.BuildingsByHotkey.TryGetValue(hotkey, out var buildingData))
+                {
+                    Debug.Log($"Hotkey '{hotkey}' selected: {buildingData.BuildingName}");
+                }
+                else
+                {
+                    Debug.Log($"No building assigned to hotkey '{hotkey}'.");
+                }
+            }
         }
     }
 }
