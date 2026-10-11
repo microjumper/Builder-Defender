@@ -25,4 +25,14 @@ public class ResourceUI : MonoBehaviour
             resourceText.text = payload.Amount.ToString();
         }
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (resourceImage != null && resourceData != null)
+        {
+            resourceImage.sprite = resourceData.ResourceSprite;
+        }
+    }
+#endif
 }

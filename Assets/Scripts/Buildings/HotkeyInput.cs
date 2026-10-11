@@ -5,7 +5,6 @@ using UnityEngine.InputSystem.Controls;
 public class HotkeyInput : MonoBehaviour
 {
     [SerializeField] private BuildingRegistry buildingRegistry;
-
     [SerializeField] private BuildingSelected buildingSelected;
 
     public void OnBuildingHotkey(InputAction.CallbackContext context)

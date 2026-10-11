@@ -17,7 +17,6 @@ public class CameraTarget : MonoBehaviour
     [SerializeField] private CinemachineCamera camera;
 
     [Header("Zoom Settings")]
-    [SerializeField, Range(MinOrthographicSize, MaxOrthographicSize)] private float orthographicSize = DefaultOrthographicSize;
     [SerializeField, Range(0.1f, 4.99f)] private float zoomSensitivity = 1f;
 
     [Header("Drag Settings")]
