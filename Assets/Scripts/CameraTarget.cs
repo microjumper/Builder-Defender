@@ -18,6 +18,7 @@ public class CameraTarget : MonoBehaviour
 
     [Header("Zoom Settings")]
     [SerializeField, Range(0.1f, 4.99f)] private float zoomSensitivity = 1f;
+    [SerializeField, Min(0.01f)] private float zoomSmoothTime = 0.15f;
 
     [Header("Drag Settings")]
     [Range(0.1f, 4.99f), SerializeField] private float dragSensitivity = 1f;
@@ -25,11 +26,19 @@ public class CameraTarget : MonoBehaviour
 
     private Vector2 delta = Vector2.zero;
 
+    private float targetOrthographicSize;
+    private float zoomVelocity = 0f;
+
+    private void Awake()
+    {
+        targetOrthographicSize = camera.Lens.OrthographicSize;
+    }
+
     public void OnCameraDrag(InputAction.CallbackContext context)
     {
         switch (context.phase)
         {
-            case InputActionPhase.Started:
+            case InputActionPhase.Performed:
                 delta = context.ReadValue<Vector2>();
                 break;
 
@@ -45,9 +54,11 @@ public class CameraTarget : MonoBehaviour
         {
             float scroll = context.ReadValue<Vector2>().y;
 
-            float newSize = camera.Lens.OrthographicSize - scroll * zoomSensitivity;
-
-            camera.Lens.OrthographicSize = Mathf.Clamp(newSize, MinOrthographicSize, MaxOrthographicSize);
+            targetOrthographicSize = Mathf.Clamp(
+                targetOrthographicSize - scroll * zoomSensitivity, 
+                MinOrthographicSize,
+                MaxOrthographicSize
+            );
         }
     }
 
@@ -62,5 +73,21 @@ public class CameraTarget : MonoBehaviour
     private void Update()
     {
         transform.Translate((int)dragStyle * dragSensitivity * Time.deltaTime * delta);
+
+        SmoothZoom();
+    }
+
+    private void SmoothZoom()
+    {
+        float currentSize = camera.Lens.OrthographicSize;
+
+        float newSize = Mathf.SmoothDamp(
+            currentSize,
+            targetOrthographicSize,
+            ref zoomVelocity,
+            zoomSmoothTime
+        );
+
+        camera.Lens.OrthographicSize = newSize;
     }
 }
