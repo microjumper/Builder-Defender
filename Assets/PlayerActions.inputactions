@@ -27,9 +27,9 @@
                     "priority": 0
                 },
                 {
-                    "name": "Drag",
+                    "name": "CameraDrag",
                     "type": "Button",
-                    "id": "92fdbe06-35c1-4064-af48-c125c1f83bc4",
+                    "id": "bc8d9a3c-67cd-405b-b15f-ac23a6f0db51",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -37,13 +37,23 @@
                     "priority": 0
                 },
                 {
-                    "name": "DragDelta",
+                    "name": "CameraZoom",
                     "type": "Value",
-                    "id": "370cdb7d-a3c5-475c-aa15-81419cacea03",
+                    "id": "b5285183-8b57-43ac-a49e-e008042210d1",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "CameraZoomReset",
+                    "type": "Button",
+                    "id": "333e827c-45e3-4d09-9715-398df8a76d2d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
                     "priority": 0
                 }
             ],
@@ -82,24 +92,57 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "2a44bb23-083c-498a-8dcf-86bec25c1703",
+                    "name": "One Modifier",
+                    "id": "e5dbb3d4-e1e5-40f0-9992-0252b0d0ae98",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraDrag",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "1c41d687-5a9f-411f-b030-2e87a659c037",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard & Mouse",
-                    "action": "Drag",
+                    "action": "CameraDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "f9363134-c2b6-4a6f-842d-3bd3dc13f7ab",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard & Mouse",
+                    "action": "CameraDrag",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "74d06371-e4d9-4696-ae07-6b340fd36e15",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard & Mouse",
+                    "action": "CameraZoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "0e79b033-7d3a-4731-a626-3c837b551f76",
-                    "path": "<Mouse>/delta",
+                    "id": "27749a2a-8c38-4431-88b7-d1d63de5bbcf",
+                    "path": "<Mouse>/middleButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard & Mouse",
-                    "action": "DragDelta",
+                    "action": "CameraZoomReset",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
