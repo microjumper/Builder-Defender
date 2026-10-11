@@ -92,6 +92,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "af218b3e-8ec4-4d37-8a1f-b86edd1ce967",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard & Mouse",
+                    "action": "BuildingHotkey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "One Modifier",
                     "id": "e5dbb3d4-e1e5-40f0-9992-0252b0d0ae98",
                     "path": "OneModifier",

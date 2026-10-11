@@ -5,14 +5,16 @@ using UnityEngine.InputSystem;
 
 public class BuildingPlacer : MonoBehaviour
 {
+    [SerializeField] private GameObject buildingGhostPrefab;
     [SerializeField] private BuildingSelected buildingSelected;
     private Camera mainCamera;
 
-    // Cache these fields to eliminate GC allocations during clicks
+    // Cached fields to eliminate GC allocations during clicks
     private PointerEventData pointerData;
     private List<RaycastResult> raycastResults;
 
     private BuildingData currentBuilding;
+    private BuildingGhost buildingGhost;
 
     private void Start()
     {
@@ -25,7 +27,29 @@ public class BuildingPlacer : MonoBehaviour
     private void OnEnable() => buildingSelected.EventRaised += OnBuildingSelected;
     private void OnDisable() => buildingSelected.EventRaised -= OnBuildingSelected;
 
-    private void OnBuildingSelected(BuildingData buildingData) => currentBuilding = buildingData;
+    private void Update() => MakeGhostFollowMouse();
+
+    private void MakeGhostFollowMouse()
+    {
+        if (buildingGhost != null)
+        {
+            Vector2 mouseWorldPosition = GetMouseWorldPosition();
+            buildingGhost.transform.position = mouseWorldPosition;
+        }
+    }
+
+    private void OnBuildingSelected(BuildingData buildingData)
+    {
+        if (buildingGhost != null)
+        {
+            Destroy(buildingGhost.gameObject);
+        }
+
+        currentBuilding = buildingData;
+
+        buildingGhost = Instantiate(buildingGhostPrefab, GetMouseWorldPosition(), Quaternion.identity).GetComponent<BuildingGhost>();
+        buildingGhost.SetSprite(currentBuilding.BuildingSprite);
+    }
 
     public void OnLeftClick(InputAction.CallbackContext context)
     {
@@ -33,10 +57,7 @@ public class BuildingPlacer : MonoBehaviour
         {
             if (currentBuilding != null)
             {
-                Vector2 screenPosition = Mouse.current.position.ReadValue();
-                Vector2 worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
-
-                BuildingFactory.Instance.CreateBuilding(currentBuilding, worldPosition);
+                BuildingFactory.Instance.CreateBuilding(currentBuilding, GetMouseWorldPosition());
             }
             else
             {
@@ -55,5 +76,11 @@ public class BuildingPlacer : MonoBehaviour
         EventSystem.current.RaycastAll(pointerData, raycastResults);
 
         return raycastResults.Count > 0;
+    }
+
+    private Vector2 GetMouseWorldPosition()
+    {
+        Vector2 screenPosition = Mouse.current.position.ReadValue();
+        return mainCamera.ScreenToWorldPoint(screenPosition);
     }
 }

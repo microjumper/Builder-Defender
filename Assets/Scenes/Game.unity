@@ -651,7 +651,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000a999971ei
+  m_ApplyToSortingLayers: 00000000a999971e6f8ac6fci
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1694,6 +1694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   camera: {fileID: 394474631}
   zoomSensitivity: 1
+  zoomSmoothTime: 0.15
   dragSensitivity: 1.5
   dragStyle: -1
 --- !u!1 &2046445150
@@ -1789,6 +1790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3574991726e89c4b95b10922c5679ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingPlacer
+  buildingGhostPrefab: {fileID: 319412676883373925, guid: adac6b3ce2eb47948b963f5a78ab0124, type: 3}
   buildingSelected: {fileID: 11400000, guid: c4e32b5a23e90144ea71b6fe3f08f10f, type: 2}
 --- !u!114 &2144556205
 MonoBehaviour:
