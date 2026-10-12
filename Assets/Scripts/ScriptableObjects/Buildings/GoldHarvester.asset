@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4373e157623ce4f99879f7312b8354, type: 3}
   m_Name: GoldHarvester
   m_EditorClassIdentifier: Assembly-CSharp::BuildingData
-  buildingName: Golf Harvester
+  buildingName: Gold Harvester
   buildingSprite: {fileID: 21300000, guid: 8ead931dd91bff8489e75de9c414f17f, type: 3}
+  buildingVisual: {fileID: 2156701223262941850, guid: be38c585b36f6194a8bb08b68a0c4302, type: 3}
   buildingHotkey: 21
   productionData: {fileID: 11400000, guid: 7e891954a3f956d4cbfacd4caade9633, type: 2}
   detectionRadius: 3

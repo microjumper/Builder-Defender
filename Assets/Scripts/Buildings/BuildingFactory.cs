@@ -22,6 +22,7 @@ public class BuildingFactory : MonoBehaviour
     public GameObject CreateBuilding(BuildingData buildingData, Vector2 position)
     {
         var buildingObject = Instantiate(buildingPrefab, position, Quaternion.identity);
+        Instantiate(buildingData.BuildingVisual, buildingObject.transform);
         buildingObject.SetActive(false);
 
         if(buildingObject.TryGetComponent(out Building building))

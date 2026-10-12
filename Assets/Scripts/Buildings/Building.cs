@@ -18,4 +18,6 @@ public class Building : MonoBehaviour
 
         spriteRenderer.sprite = buildingData.BuildingSprite;
     }
+
+    public void DisableSprite() => spriteRenderer.enabled = false;
 }

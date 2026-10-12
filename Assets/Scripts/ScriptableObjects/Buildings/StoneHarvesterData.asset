@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingData
   buildingName: Stone Harvester
   buildingSprite: {fileID: 21300000, guid: 2263e91ebcd2a254dab5f4caccb4a7af, type: 3}
+  buildingVisual: {fileID: 5191442329625139610, guid: 5b8b424b62a151c4f9620c86dacc2b1f, type: 3}
   buildingHotkey: 33
   productionData: {fileID: 11400000, guid: b21666386b5be404ba04a3765ebb6f6f, type: 2}
   detectionRadius: 3

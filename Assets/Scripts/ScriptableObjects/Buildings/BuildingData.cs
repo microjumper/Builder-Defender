@@ -6,6 +6,7 @@ public class BuildingData : ScriptableObject
 {
     [SerializeField] private string buildingName;
     [SerializeField] private Sprite buildingSprite;
+    [SerializeField] private GameObject buildingVisual;
     [SerializeField] private Key buildingHotkey;
     [SerializeField] private ProductionData productionData;
 
@@ -16,6 +17,7 @@ public class BuildingData : ScriptableObject
 
     public string BuildingName => buildingName;
     public Sprite BuildingSprite => buildingSprite;
+    public GameObject BuildingVisual => buildingVisual;
     public Key BuildingHotkey => buildingHotkey;
     public ProductionData ProductionData => productionData;
     public float DetectionRadius => detectionRadius;
