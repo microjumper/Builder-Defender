@@ -32,7 +32,10 @@ public class BuildingFactory : MonoBehaviour
         if(buildingObject.TryGetComponent(out ResourceGenerator resourceGenerator))
         {
             resourceGenerator.SetResourceInventory(resourceInventory);
-            resourceGenerator.SetProductionData(buildingData.ProductionData);
+            resourceGenerator.SetProductionData(
+                buildingData.ProductionData,
+                buildingData.DetectionRadius,
+                buildingData.RequiresNearbyResource);
         }
 
         buildingObject.SetActive(true);

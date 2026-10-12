@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(ResourceGenerator))]
 public class Building : MonoBehaviour
 {
     private BuildingData buildingData;

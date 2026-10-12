@@ -7,6 +7,7 @@ public class BuildingPlacer : MonoBehaviour
 {
     [SerializeField] private GameObject buildingGhostPrefab;
     [SerializeField] private BuildingSelected buildingSelected;
+    
     private Camera mainCamera;
 
     // Cached fields to eliminate GC allocations during clicks
@@ -31,10 +32,31 @@ public class BuildingPlacer : MonoBehaviour
 
     private void MakeGhostFollowMouse()
     {
-        if (buildingGhost != null)
+        if (buildingGhost != null && currentBuilding != null)
         {
             Vector2 mouseWorldPosition = GetMouseWorldPosition();
             buildingGhost.transform.position = mouseWorldPosition;
+
+            CheckPlacement(mouseWorldPosition);
+        }
+    }
+
+    private void CheckPlacement(Vector2 position)
+    {
+        if (currentBuilding.RequiresNearbyResource)
+        {
+            if (ResourceNode.TryFindNearest(position, currentBuilding.ProductionData.ResourceData, currentBuilding.DetectionRadius, out var node))
+            {
+                buildingGhost.SetValidState();
+            }
+            else
+            {
+                buildingGhost.SetIdleState();
+            }
+        }
+        else
+        {
+            buildingGhost.SetValidState();
         }
     }
 
@@ -43,9 +65,15 @@ public class BuildingPlacer : MonoBehaviour
         if (buildingGhost != null)
         {
             Destroy(buildingGhost.gameObject);
+            buildingGhost = null;
         }
 
         currentBuilding = buildingData;
+
+        if (currentBuilding == null)
+        {
+            return;
+        }
 
         buildingGhost = Instantiate(buildingGhostPrefab, GetMouseWorldPosition(), Quaternion.identity).GetComponent<BuildingGhost>();
         buildingGhost.SetSprite(currentBuilding.BuildingSprite);
