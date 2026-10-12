@@ -1232,6 +1232,52 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7609410523257851620, guid: 2c597f8dd37c17c4399bdbb29a119308, type: 3}
   m_PrefabInstance: {fileID: 1127585065}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1150499648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1150499650}
+  - component: {fileID: 1150499649}
+  m_Layer: 0
+  m_Name: ResourceNode
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1150499649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150499648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cf0cc1dd528d644e97473c472792b8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceNode
+  resourceData: {fileID: 11400000, guid: 52abb73ae3f89d54f8f4ab4facb420a7, type: 2}
+  initialAmount: 100
+--- !u!4 &1150499650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150499648}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1346429897
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,3 +2121,4 @@ SceneRoots:
   - {fileID: 205550532}
   - {fileID: 394474632}
   - {fileID: 1923724950}
+  - {fileID: 1150499650}
