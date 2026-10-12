@@ -17,6 +17,9 @@ public class BuildingPlacer : MonoBehaviour
     private BuildingData currentBuilding;
     private BuildingGhost buildingGhost;
 
+    // Authoritative placement state, recomputed each frame while a ghost is active.
+    private bool canPlace = false;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -43,20 +46,17 @@ public class BuildingPlacer : MonoBehaviour
 
     private void CheckPlacement(Vector2 position)
     {
-        if (currentBuilding.RequiresNearbyResource)
+        // Authoritative gate (future blocking rules live in BuildingPlacementRules.IsValid).
+        canPlace = BuildingPlacementRules.IsValid(currentBuilding, position);
+
+        // Informational feedback only: green = will produce, yellow = will idle.
+        if (BuildingPlacementRules.WillProduce(currentBuilding, position))
         {
-            if (ResourceNode.TryFindNearest(position, currentBuilding.ProductionData.ResourceData, currentBuilding.DetectionRadius, out var node))
-            {
-                buildingGhost.SetValidState();
-            }
-            else
-            {
-                buildingGhost.SetIdleState();
-            }
+            buildingGhost.SetValidState();
         }
         else
         {
-            buildingGhost.SetValidState();
+            buildingGhost.SetIdleState();
         }
     }
 
@@ -83,14 +83,21 @@ public class BuildingPlacer : MonoBehaviour
     {
         if (context.performed && !IsPointerOverUI())
         {
-            if (currentBuilding != null)
-            {
-                BuildingFactory.Instance.CreateBuilding(currentBuilding, GetMouseWorldPosition());
-            }
-            else
+            if (currentBuilding == null)
             {
                 Debug.LogWarning("No building selected. Please select a building using the hotkeys.");
+                return;
             }
+
+            // Recompute at click time so a mouse move since the last Update can't slip through.
+            Vector2 clickPosition = GetMouseWorldPosition();
+
+            if (!BuildingPlacementRules.IsValid(currentBuilding, clickPosition))
+            {
+                return;
+            }
+
+            BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition);
         }
     }
 
