@@ -39,7 +39,10 @@ public class BuildingPlacer : MonoBehaviour
             Vector2 mouseWorldPosition = GetMouseWorldPosition();
             buildingGhost.transform.position = mouseWorldPosition;
 
-            CheckPlacement(mouseWorldPosition);
+            if (CanBePlaced(mouseWorldPosition))
+            {
+                CheckProduction(currentBuilding, mouseWorldPosition);
+            }
         }
     }
 
@@ -49,24 +52,34 @@ public class BuildingPlacer : MonoBehaviour
         return mainCamera.ScreenToWorldPoint(screenPosition);
     }
 
-    private void CheckPlacement(Vector2 position)
+    private bool CanBePlaced(Vector2 position)
     {
         if (Physics2D.OverlapBoxAll(position, currentBuilding.BuildingFootprint, 0f, obstacleLayers).Length > 0)
         {
             PlacementValidityChanged.RaiseEvent(PlacementState.Denied);
             
-            return;
+            return false;
         }
 
-        if (BuildingPlacementRules.WillProduce(currentBuilding, position))
+        return true;
+    }
+
+    private void CheckProduction(BuildingData buildingData, Vector2 position)
+    {
+        if (!buildingData.RequiresNearbyResource || HasNearbyResource(buildingData, position))
         {
             PlacementValidityChanged.RaiseEvent(PlacementState.Allowed);
-
         }
         else
         {
             PlacementValidityChanged.RaiseEvent(PlacementState.Idle);
         }
+    }
+
+    private bool HasNearbyResource(BuildingData buildingData, Vector2 position)
+    {
+        // TODO: Handle the logic here
+        return ResourceNode.HasNodeInRange(position, buildingData.ProductionData.ResourceData, buildingData.DetectionRadius);
     }
 
     public void OnLeftClick(InputAction.CallbackContext context)
@@ -82,12 +95,10 @@ public class BuildingPlacer : MonoBehaviour
             // Recompute at click time so a mouse move since the last Update can't slip through.
             Vector2 clickPosition = GetMouseWorldPosition();
 
-            if (!BuildingPlacementRules.IsValid(currentBuilding, clickPosition))
+            if (CanBePlaced(clickPosition))
             {
-                return;
+                BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition);
             }
-
-            BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition);
         }
     }
 
