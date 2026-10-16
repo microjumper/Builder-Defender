@@ -5,9 +5,10 @@ using UnityEngine.InputSystem;
 
 public class BuildingPlacer : MonoBehaviour
 {
-    [SerializeField] private GameObject buildingGhostPrefab;
-    [SerializeField] private BuildingSelected buildingSelected;
-    
+    [SerializeField] private BuildingSelected BuildingSelected;
+    [SerializeField] private PlacementValidityChanged PlacementValidityChanged;
+    [SerializeField] private BuildingGhost buildingGhost;
+
     private Camera mainCamera;
 
     // Cached fields to eliminate GC allocations during clicks
@@ -15,7 +16,6 @@ public class BuildingPlacer : MonoBehaviour
     private List<RaycastResult> raycastResults;
 
     private BuildingData currentBuilding;
-    private BuildingGhost buildingGhost;
 
     // Authoritative placement state, recomputed each frame while a ghost is active.
     private bool canPlace = false;
@@ -28,55 +28,44 @@ public class BuildingPlacer : MonoBehaviour
         raycastResults = new List<RaycastResult>();
     }
 
-    private void OnEnable() => buildingSelected.EventRaised += OnBuildingSelected;
-    private void OnDisable() => buildingSelected.EventRaised -= OnBuildingSelected;
+    private void OnEnable() => BuildingSelected.EventRaised += OnBuildingSelected;
+    private void OnDisable() => BuildingSelected.EventRaised -= OnBuildingSelected;
 
-    private void Update() => MakeGhostFollowMouse();
-
-    private void MakeGhostFollowMouse()
+    private void Update()
     {
-        if (buildingGhost != null && currentBuilding != null)
+        if (currentBuilding != null)
         {
             Vector2 mouseWorldPosition = GetMouseWorldPosition();
             buildingGhost.transform.position = mouseWorldPosition;
-
             CheckPlacement(mouseWorldPosition);
         }
     }
 
     private void CheckPlacement(Vector2 position)
     {
-        // Authoritative gate (future blocking rules live in BuildingPlacementRules.IsValid).
         canPlace = BuildingPlacementRules.IsValid(currentBuilding, position);
 
-        // Informational feedback only: green = will produce, yellow = will idle.
-        if (BuildingPlacementRules.WillProduce(currentBuilding, position))
+        if (canPlace)
         {
-            buildingGhost.SetValidState();
+            if (BuildingPlacementRules.WillProduce(currentBuilding, position))
+            {
+                PlacementValidityChanged.RaiseEvent(PlacementState.Allowed);
+
+            }
+            else
+            {
+                PlacementValidityChanged.RaiseEvent(PlacementState.Idle);
+            }
         }
         else
         {
-            buildingGhost.SetIdleState();
+            PlacementValidityChanged.RaiseEvent(PlacementState.Denied);
         }
     }
 
     private void OnBuildingSelected(BuildingData buildingData)
     {
-        if (buildingGhost != null)
-        {
-            Destroy(buildingGhost.gameObject);
-            buildingGhost = null;
-        }
-
         currentBuilding = buildingData;
-
-        if (currentBuilding == null)
-        {
-            return;
-        }
-
-        buildingGhost = Instantiate(buildingGhostPrefab, GetMouseWorldPosition(), Quaternion.identity).GetComponent<BuildingGhost>();
-        buildingGhost.SetSprite(currentBuilding.BuildingSprite);
     }
 
     public void OnLeftClick(InputAction.CallbackContext context)

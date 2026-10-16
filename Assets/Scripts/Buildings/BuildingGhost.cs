@@ -3,11 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class BuildingGhost : MonoBehaviour
 {
-    private const float Alpha = 0.5f;
+    [Header("Colors for different placement states")]
+    [SerializeField] private Color placementAllowedColor = Color.green;
+    [SerializeField] private Color previewIdleColor = Color.yellow;
+    [SerializeField] private Color placementDeniedColor = Color.red;
+    [SerializeField] private float alpha = 0.5f;
 
-    private readonly Color validPlacementColor = Color.green;
-    private readonly Color idleColor = Color.yellow;
-    private readonly Color invalidPlacementColor = Color.red;
+    [Header("Event Channels")]
+    [SerializeField] private BuildingSelected BuildingSelected;
+    [SerializeField] private PlacementValidityChanged PlacementValidityChanged;
 
     private SpriteRenderer spriteRenderer;
 
@@ -16,23 +20,40 @@ public class BuildingGhost : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void SetSprite(Sprite sprite)
+    private void OnEnable()
     {
-        spriteRenderer.sprite = sprite;
+        BuildingSelected.EventRaised += OnBuildingSelected;
+        PlacementValidityChanged.EventRaised += OnPlacementValidityChanged;
     }
 
-    public void SetValidState()
+    private void OnDisable()
     {
-        spriteRenderer.color = new Color(validPlacementColor.r, validPlacementColor.g, validPlacementColor.b, Alpha);
+        BuildingSelected.EventRaised -= OnBuildingSelected;
+        PlacementValidityChanged.EventRaised -= OnPlacementValidityChanged;
     }
 
-    public void SetIdleState()
+    private void OnBuildingSelected(BuildingData buildingData)
     {
-        spriteRenderer.color = new Color(idleColor.r, idleColor.g, idleColor.b, Alpha);
+        if (buildingData != null)
+        {
+            spriteRenderer.sprite = buildingData.BuildingSprite;
+        }
+        else
+        {
+            spriteRenderer.sprite = null;
+        }
     }
 
-    public void SetInvalidState()
+    private void OnPlacementValidityChanged(PlacementState state)
     {
-        spriteRenderer.color = new Color(invalidPlacementColor.r, invalidPlacementColor.g, invalidPlacementColor.b, Alpha);
+        var placementColor = state switch
+        {
+            PlacementState.Allowed => placementAllowedColor,
+            PlacementState.Idle => previewIdleColor,
+            PlacementState.Denied => placementDeniedColor,
+            _ => Color.white
+        };
+
+        spriteRenderer.color = new Color(placementColor.r, placementColor.g, placementColor.b, alpha);
     }
 }

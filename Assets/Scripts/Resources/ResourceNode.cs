@@ -3,34 +3,20 @@ using UnityEngine;
 
 public class ResourceNode : MonoBehaviour
 {
+    public static IReadOnlyCollection<ResourceNode> AllNodes => allNodes;
     private static readonly HashSet<ResourceNode> allNodes = new();
 
-    public static IReadOnlyCollection<ResourceNode> AllNodes => allNodes;
-
-    [Header("Definition")]
-    [SerializeField] private ResourceData resourceData;
-
-    [Header("Capacity")]
-    [SerializeField, Min(1)] private int initialAmount = 100;
+    [SerializeField] private ResourceNodeData resourceNodeData;
 
     private int currentAmount;
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
 
-    public ResourceData ResourceData => resourceData;
-    public int CurrentAmount => currentAmount;
-    public int InitialAmount => initialAmount;
     public bool IsDepleted => currentAmount <= 0;
 
     private void Awake()
     {
-        currentAmount = initialAmount;
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        currentAmount = resourceNodeData.ResourceAmount;
 
-        if (spriteRenderer != null)
-        {
-            originalColor = spriteRenderer.color;
-        }
+        Instantiate(resourceNodeData.ResourceVisual, transform.position, Quaternion.identity, transform);
     }
 
     private void OnEnable() => allNodes.Add(this);
@@ -56,10 +42,7 @@ public class ResourceNode : MonoBehaviour
 
     private void OnDepleted()
     {
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = originalColor * 0.4f;
-        }
+        Debug.Log($"Resource node '{resourceNodeData.ResourceName}' is depleted.");
     }
 
     public static bool TryFindNearest(Vector2 position, ResourceData resourceData, float radius, out ResourceNode nearest)
@@ -74,7 +57,7 @@ public class ResourceNode : MonoBehaviour
                 continue;
             }
 
-            if (resourceData != null && node.resourceData != resourceData)
+            if (resourceData != null && node.resourceNodeData != resourceData)
             {
                 continue;
             }
