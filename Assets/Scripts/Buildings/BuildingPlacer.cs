@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class BuildingPlacer : MonoBehaviour
 {
+    [SerializeField] private LayerMask obstacleLayers;
+
     [SerializeField] private BuildingSelected BuildingSelected;
     [SerializeField] private PlacementValidityChanged PlacementValidityChanged;
     [SerializeField] private BuildingGhost buildingGhost;
@@ -17,9 +19,6 @@ public class BuildingPlacer : MonoBehaviour
 
     private BuildingData currentBuilding;
 
-    // Authoritative placement state, recomputed each frame while a ghost is active.
-    private bool canPlace = false;
-
     private void Start()
     {
         mainCamera = Camera.main;
@@ -31,41 +30,43 @@ public class BuildingPlacer : MonoBehaviour
     private void OnEnable() => BuildingSelected.EventRaised += OnBuildingSelected;
     private void OnDisable() => BuildingSelected.EventRaised -= OnBuildingSelected;
 
+    private void OnBuildingSelected(BuildingData buildingData) => currentBuilding = buildingData;
+
     private void Update()
     {
         if (currentBuilding != null)
         {
             Vector2 mouseWorldPosition = GetMouseWorldPosition();
             buildingGhost.transform.position = mouseWorldPosition;
+
             CheckPlacement(mouseWorldPosition);
         }
     }
 
+    private Vector2 GetMouseWorldPosition()
+    {
+        Vector2 screenPosition = Mouse.current.position.ReadValue();
+        return mainCamera.ScreenToWorldPoint(screenPosition);
+    }
+
     private void CheckPlacement(Vector2 position)
     {
-        canPlace = BuildingPlacementRules.IsValid(currentBuilding, position);
-
-        if (canPlace)
+        if (Physics2D.OverlapBoxAll(position, currentBuilding.BuildingFootprint, 0f, obstacleLayers).Length > 0)
         {
-            if (BuildingPlacementRules.WillProduce(currentBuilding, position))
-            {
-                PlacementValidityChanged.RaiseEvent(PlacementState.Allowed);
+            PlacementValidityChanged.RaiseEvent(PlacementState.Denied);
+            
+            return;
+        }
 
-            }
-            else
-            {
-                PlacementValidityChanged.RaiseEvent(PlacementState.Idle);
-            }
+        if (BuildingPlacementRules.WillProduce(currentBuilding, position))
+        {
+            PlacementValidityChanged.RaiseEvent(PlacementState.Allowed);
+
         }
         else
         {
-            PlacementValidityChanged.RaiseEvent(PlacementState.Denied);
+            PlacementValidityChanged.RaiseEvent(PlacementState.Idle);
         }
-    }
-
-    private void OnBuildingSelected(BuildingData buildingData)
-    {
-        currentBuilding = buildingData;
     }
 
     public void OnLeftClick(InputAction.CallbackContext context)
@@ -100,11 +101,5 @@ public class BuildingPlacer : MonoBehaviour
         EventSystem.current.RaycastAll(pointerData, raycastResults);
 
         return raycastResults.Count > 0;
-    }
-
-    private Vector2 GetMouseWorldPosition()
-    {
-        Vector2 screenPosition = Mouse.current.position.ReadValue();
-        return mainCamera.ScreenToWorldPoint(screenPosition);
     }
 }

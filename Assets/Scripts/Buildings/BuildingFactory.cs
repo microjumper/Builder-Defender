@@ -25,7 +25,12 @@ public class BuildingFactory : MonoBehaviour
         Instantiate(buildingData.BuildingVisual, buildingObject.transform);
         buildingObject.SetActive(false);
 
-        if(buildingObject.TryGetComponent(out Building building))
+        if (buildingObject.TryGetComponent(out BoxCollider2D collider))
+        {
+            collider.size = buildingData.BuildingFootprint;
+        }
+
+        if (buildingObject.TryGetComponent(out Building building))
         {
             building.SetBuildingData(buildingData);
         }

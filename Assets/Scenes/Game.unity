@@ -1958,6 +1958,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3574991726e89c4b95b10922c5679ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingPlacer
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 1024
   BuildingSelected: {fileID: 11400000, guid: c4e32b5a23e90144ea71b6fe3f08f10f, type: 2}
   PlacementValidityChanged: {fileID: 11400000, guid: 206c843e1c902724d88fb7e9a0154de9, type: 2}
   buildingGhost: {fileID: 1690578587}

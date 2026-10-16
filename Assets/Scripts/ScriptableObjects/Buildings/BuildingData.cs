@@ -9,6 +9,7 @@ public class BuildingData : ScriptableObject
     [SerializeField] private GameObject buildingVisual;
     [SerializeField] private Key buildingHotkey;
     [SerializeField] private ProductionData productionData;
+    [SerializeField] private Vector2 buildingFootprint = new (9, 8);
 
     [Header("Gathering")]
     [SerializeField, Min(0f)] private float detectionRadius = 3f;
@@ -20,6 +21,7 @@ public class BuildingData : ScriptableObject
     public GameObject BuildingVisual => buildingVisual;
     public Key BuildingHotkey => buildingHotkey;
     public ProductionData ProductionData => productionData;
+    public Vector2 BuildingFootprint => buildingFootprint;
     public float DetectionRadius => detectionRadius;
     public bool RequiresNearbyResource => requiresNearbyResource;
 }
