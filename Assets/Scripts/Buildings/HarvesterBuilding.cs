@@ -1,12 +1,11 @@
 using UnityEngine;
 
-// TODO: Refactor this to use a state machine
-
 [RequireComponent(typeof(SpriteRenderer))]
 public class HarvesterBuilding : MonoBehaviour
 {
+    private enum State { Idle, Producing }
+
     private const float TickInterval = 1f;
-    private float elapsedTime = 0f;
 
     private BuildingData buildingData;
     private ResourceInventory resourceInventory;
@@ -15,6 +14,8 @@ public class HarvesterBuilding : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     private ResourceNode currentNode;
+    private State? state;
+    private float elapsedTime;
 
     private void Awake()
     {
@@ -23,67 +24,103 @@ public class HarvesterBuilding : MonoBehaviour
 
     private void Update()
     {
-        if (currentNode == null)
+        if (state != State.Producing)
         {
             return;
         }
 
         elapsedTime += Time.deltaTime;
 
-        if (elapsedTime >= TickInterval)
-        {
-            elapsedTime -= TickInterval;
+        TickProducing();
+    }
 
-            GenerateResource();
+    private void TickProducing()
+    {
+        if (currentNode == null || currentNode.IsDepleted)
+        {
+            AcquireNearbyNode();
+
+            return;
         }
 
-        if (currentNode.IsDepleted)
+        if (elapsedTime < TickInterval)
         {
-            ResourceNodeFinder.TryFindNearbyNode(
-                transform.position, 
-                buildingData.ReachArea(transform.position), 
-                buildingData.ProductionData.ResourceData, 
-                out ResourceNode node
-            );
-            
-            currentNode = node;
+            return;
+        }
 
-            if (currentNode == null)
-            {
-                spriteRenderer.sprite = buildingData.BuildingSprite;
-                buildingVisual.SetActive(false);
-            }
+        elapsedTime -= TickInterval;
+
+        GenerateResource();
+    }
+
+    private void AcquireNearbyNode()
+    {
+        if (ResourceNodeFinder.TryFindNearbyNode(
+                transform.position,
+                buildingData.ReachArea(transform.position),
+                buildingData.ProductionData.ResourceData,
+                out ResourceNode node))
+        {
+            SetCurrentNode(node);
+        }
+        else
+        {
+            SetCurrentNode(null);
         }
     }
 
     private void GenerateResource()
     {
-        if (currentNode != null && !currentNode.IsDepleted)
+        currentNode.Harvest(buildingData.ProductionData.ProductionPerSecond);
+        resourceInventory.AddResource(buildingData.ProductionData.ResourceData, buildingData.ProductionData.ProductionPerSecond);
+    }
+
+    private void SetState(State newState)
+    {
+        if (state == newState)
         {
-            currentNode.Harvest(buildingData.ProductionData.ProductionPerSecond);
-            resourceInventory.AddResource(buildingData.ProductionData.ResourceData, buildingData.ProductionData.ProductionPerSecond);
+            return;
+        }
+
+        state = newState;
+        elapsedTime = 0f;
+
+        switch (newState)
+        {
+            case State.Idle:
+                spriteRenderer.sprite = buildingData.BuildingSprite;
+                buildingVisual.SetActive(false);
+                break;
+            case State.Producing:
+                spriteRenderer.sprite = null;
+                buildingVisual.SetActive(true);
+                break;
         }
     }
 
-    public void Initialize(BuildingData buildingData, ResourceInventory resourceInventory, GameObject buildingVisual)
+    private void SetCurrentNode(ResourceNode node)
+    {
+        currentNode = node;
+        SetState(node != null ? State.Producing : State.Idle);
+    }
+
+    public void Initialize(BuildingData buildingData, ResourceInventory resourceInventory, GameObject buildingVisual, ResourceNode node = null)
     {
         this.buildingData = buildingData;
         this.resourceInventory = resourceInventory;
         this.buildingVisual = buildingVisual;
 
-        spriteRenderer.sprite = buildingData.BuildingSprite;
-    }
-
-    public void SetCurrentNode(ResourceNode node)
-    {
-        currentNode = node;
-
-        spriteRenderer.sprite = null;
+        SetCurrentNode(node);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        if (buildingData == null)
+        {
+            return;
+        }
+
         Gizmos.color = Color.grey;
         Gizmos.DrawWireCube(transform.position, (Vector3)buildingData.ReachArea(transform.position).size);
     }

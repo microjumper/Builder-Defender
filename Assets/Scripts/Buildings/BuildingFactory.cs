@@ -34,12 +34,7 @@ public class BuildingFactory : MonoBehaviour
 
         if (buildingObject.TryGetComponent(out HarvesterBuilding building))
         {
-            building.Initialize(buildingData, resourceInventory, buildingVisual);
-
-            if (resourceNode != null)
-            {
-                building.SetCurrentNode(resourceNode);
-            }
+            building.Initialize(buildingData, resourceInventory, buildingVisual, resourceNode);
         }
 
         buildingObject.SetActive(true);
