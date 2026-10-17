@@ -19,10 +19,12 @@ public class BuildingFactory : MonoBehaviour
         Instance = this;
     }
 
-    public GameObject CreateBuilding(BuildingData buildingData, Vector2 position)
+    public GameObject CreateBuilding(BuildingData buildingData, Vector2 position, ResourceNode resourceNode = null)
     {
         var buildingObject = Instantiate(buildingPrefab, position, Quaternion.identity);
-        Instantiate(buildingData.BuildingVisual, buildingObject.transform);
+        
+        var buildingVisual = Instantiate(buildingData.BuildingVisual, buildingObject.transform);
+       
         buildingObject.SetActive(false);
 
         if (buildingObject.TryGetComponent(out BoxCollider2D collider))
@@ -30,14 +32,14 @@ public class BuildingFactory : MonoBehaviour
             collider.size = buildingData.BuildingFootprint;
         }
 
-        if (buildingObject.TryGetComponent(out Building building))
+        if (buildingObject.TryGetComponent(out HarvesterBuilding building))
         {
-            building.SetBuildingData(buildingData);
-        }
+            building.Initialize(buildingData, resourceInventory, buildingVisual);
 
-        if(buildingObject.TryGetComponent(out ResourceGenerator resourceGenerator))
-        {
-            resourceGenerator.SetResourceInventory(resourceInventory);
+            if (resourceNode != null)
+            {
+                building.SetCurrentNode(resourceNode);
+            }
         }
 
         buildingObject.SetActive(true);

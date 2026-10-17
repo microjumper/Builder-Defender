@@ -92,8 +92,29 @@ public class BuildingPlacer : MonoBehaviour
 
             if (CanBePlaced(clickPosition))
             {
-                BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition);
+                if (ResourceNodeFinder.TryFindNearbyNode(
+                    clickPosition,
+                    currentBuilding.ReachArea(clickPosition),
+                    currentBuilding.ProductionData.ResourceData,
+                    out ResourceNode resourceNode))
+                {
+                    BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition, resourceNode);
+                }
+                else
+                {
+                    BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition);
+                }
             }
+        }
+    }
+
+    public void OnEscape(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            currentBuilding = null;
+
+            BuildingSelected.RaiseEvent(null);
         }
     }
 

@@ -335,6 +335,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 333e827c-45e3-4d09-9715-398df8a76d2d
     m_ActionName: 'Player/CameraZoomReset[/Mouse/middleButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2144556204}
+        m_TargetAssemblyTypeName: BuildingPlacer, Assembly-CSharp
+        m_MethodName: OnEscape
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 7334e7b7-0de8-42aa-af1a-d149b6b423b1
+    m_ActionName: 'Player/Escape[/Keyboard/escape]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard & Mouse
   m_DefaultActionMap: Player
@@ -1342,7 +1358,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -1861,6 +1877,7 @@ MonoBehaviour:
   resourceDataList:
   - {fileID: 11400000, guid: 52abb73ae3f89d54f8f4ab4facb420a7, type: 2}
   - {fileID: 11400000, guid: da366fb055dea5d4bbd0846e97023028, type: 2}
+  - {fileID: 11400000, guid: 2584abe73866b3d468790894b990c840, type: 2}
 --- !u!1 &2144556201
 GameObject:
   m_ObjectHideFlags: 0

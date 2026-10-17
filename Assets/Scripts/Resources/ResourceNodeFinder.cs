@@ -19,7 +19,6 @@ public static class ResourceNodeFinder
                         return true;
                     }
                 }
-
             }
         }
 

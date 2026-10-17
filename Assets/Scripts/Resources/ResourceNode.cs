@@ -37,6 +37,8 @@ public class ResourceNode : MonoBehaviour
     private void OnDepleted()
     {
         Debug.Log($"Resource node '{resourceNodeData.ResourceData.ResourceName}' is depleted.");
+        
+        Destroy(gameObject);
     }
 
 #if UNITY_EDITOR
