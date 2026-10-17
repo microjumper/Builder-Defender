@@ -20,4 +20,12 @@ public class Building : MonoBehaviour
     }
 
     public void DisableSprite() => spriteRenderer.enabled = false;
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.grey;
+        Gizmos.DrawWireCube(transform.position, (Vector3)buildingData.ReachArea(transform.position).size);
+    }
+#endif
 }

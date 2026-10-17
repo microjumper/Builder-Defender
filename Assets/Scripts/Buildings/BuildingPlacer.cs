@@ -66,7 +66,8 @@ public class BuildingPlacer : MonoBehaviour
 
     private void CheckProduction(BuildingData buildingData, Vector2 position)
     {
-        if (!buildingData.RequiresNearbyResource || HasNearbyResource(buildingData, position))
+        if (!buildingData.RequiresNearbyResource || 
+            ResourceNodeFinder.TryFindNearbyNode(position, buildingData.ReachArea(position), buildingData.ProductionData.ResourceData, out _))
         {
             PlacementValidityChanged.RaiseEvent(PlacementState.Allowed);
         }
@@ -74,12 +75,6 @@ public class BuildingPlacer : MonoBehaviour
         {
             PlacementValidityChanged.RaiseEvent(PlacementState.Idle);
         }
-    }
-
-    private bool HasNearbyResource(BuildingData buildingData, Vector2 position)
-    {
-        // TODO: Handle the logic here
-        return ResourceNode.HasNodeInRange(position, buildingData.ProductionData.ResourceData, buildingData.DetectionRadius);
     }
 
     public void OnLeftClick(InputAction.CallbackContext context)

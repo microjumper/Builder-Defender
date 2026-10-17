@@ -7,7 +7,7 @@ public class ResourceNodeData : ScriptableObject
     [SerializeField] private GameObject resourceVisual;
     [SerializeField, Min(1)] private int resourceAmount = 10;
 
-    public string ResourceName => resourceData.ResourceName;
+    public ResourceData ResourceData => resourceData;
     public GameObject ResourceVisual => resourceVisual;
     public int ResourceAmount => resourceAmount;
 }

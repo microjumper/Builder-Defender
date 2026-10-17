@@ -1,11 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceNode : MonoBehaviour
 {
-    public static IReadOnlyCollection<ResourceNode> AllNodes => allNodes;
-    private static readonly HashSet<ResourceNode> allNodes = new();
-
+    public ResourceNodeData ResourceNodeData => resourceNodeData;
     [SerializeField] private ResourceNodeData resourceNodeData;
 
     private int currentAmount;
@@ -18,9 +15,6 @@ public class ResourceNode : MonoBehaviour
 
         Instantiate(resourceNodeData.ResourceVisual, transform.position, Quaternion.identity, transform);
     }
-
-    private void OnEnable() => allNodes.Add(this);
-    private void OnDisable() => allNodes.Remove(this);
 
     public int Harvest(int amount)
     {
@@ -42,44 +36,8 @@ public class ResourceNode : MonoBehaviour
 
     private void OnDepleted()
     {
-        Debug.Log($"Resource node '{resourceNodeData.ResourceName}' is depleted.");
+        Debug.Log($"Resource node '{resourceNodeData.ResourceData.ResourceName}' is depleted.");
     }
-
-    public static bool TryFindNearest(Vector2 position, ResourceData resourceData, float radius, out ResourceNode nearest)
-    {
-        nearest = null;
-        float nearestSqr = radius * radius;
-
-        foreach (var node in allNodes)
-        {
-            if (node == null || !node.isActiveAndEnabled || node.IsDepleted)
-            {
-                continue;
-            }
-
-            if (resourceData != null && node.resourceNodeData != resourceData)
-            {
-                continue;
-            }
-
-            float sqr = ((Vector2)node.transform.position - position).sqrMagnitude;
-
-            if (sqr <= nearestSqr)
-            {
-                // Flat rate: first node in range is enough, prefer closest for shared-node fairness.
-                if (nearest == null || sqr < ((Vector2)nearest.transform.position - position).sqrMagnitude)
-                {
-                    nearest = node;
-                    nearestSqr = sqr;
-                }
-            }
-        }
-
-        return nearest != null;
-    }
-
-    public static bool HasNodeInRange(Vector2 position, ResourceData resourceData, float radius)
-        => TryFindNearest(position, resourceData, radius, out _);
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
