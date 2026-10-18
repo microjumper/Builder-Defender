@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ResourceUI : MonoBehaviour
 {
-    [SerializeField] private ResourceAmoutChanged resourceAmountChanged;
+    [SerializeField] private ResourceAmountChanged ResourceAmountChanged;
     [SerializeField] private ResourceData resourceData;
     [SerializeField] private Image resourceImage;
     [SerializeField] private TextMeshProUGUI resourceText;
@@ -15,8 +15,8 @@ public class ResourceUI : MonoBehaviour
         resourceText.text = "0";
     }
 
-    private void OnEnable() => resourceAmountChanged.EventRaised += OnResourceAmoutChanged;
-    private void OnDisable() => resourceAmountChanged.EventRaised -= OnResourceAmoutChanged;
+    private void OnEnable() => ResourceAmountChanged.EventRaised += OnResourceAmoutChanged;
+    private void OnDisable() => ResourceAmountChanged.EventRaised -= OnResourceAmoutChanged;
 
     private void OnResourceAmoutChanged(ResourceAmontPayload payload)
     {

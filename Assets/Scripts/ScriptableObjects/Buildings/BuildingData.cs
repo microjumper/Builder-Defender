@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +11,7 @@ public class BuildingData : ScriptableObject
     [SerializeField] private GameObject buildingVisual;
     [SerializeField] private Key buildingHotkey;
     [SerializeField] private ProductionData productionData;
+    [SerializeField] private Dictionary<ResourceData, int> resourceRequirements = new();
     [SerializeField] private Vector2 buildingFootprint = new (9, 8);
 
     [Header("Gathering")]
@@ -22,6 +25,7 @@ public class BuildingData : ScriptableObject
     public Key BuildingHotkey => buildingHotkey;
     public ProductionData ProductionData => productionData;
     public Vector2 BuildingFootprint => buildingFootprint;
+    public ReadOnlyDictionary<ResourceData, int> ResourceRequirements => new(resourceRequirements);
     public float DetectionDistance => detectionDistance;
     public bool RequiresNearbyResource => requiresNearbyResource;
 

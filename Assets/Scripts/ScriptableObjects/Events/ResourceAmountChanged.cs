@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ResourceAmoutChanged", menuName = "Scriptable Objects/Events/ResourceAmoutChanged")]
-public sealed class ResourceAmoutChanged : EventChannelData<ResourceAmontPayload> { }
+[CreateAssetMenu(fileName = "ResourceAmountChanged", menuName = "Scriptable Objects/Events/ResourceAmountChanged")]
+public sealed class ResourceAmountChanged : EventChannelData<ResourceAmontPayload> { }
 
 public readonly struct ResourceAmontPayload
 {

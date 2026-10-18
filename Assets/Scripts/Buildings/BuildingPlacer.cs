@@ -7,6 +7,7 @@ public class BuildingPlacer : MonoBehaviour
 {
     [SerializeField] private LayerMask obstacleLayers;
 
+    [SerializeField] private ResourceInventory resourceInventory;
     [SerializeField] private BuildingSelected BuildingSelected;
     [SerializeField] private PlacementValidityChanged PlacementValidityChanged;
     [SerializeField] private BuildingGhost buildingGhost;
@@ -54,7 +55,8 @@ public class BuildingPlacer : MonoBehaviour
 
     private bool CanBePlaced(Vector2 position)
     {
-        if (Physics2D.OverlapBoxAll(position, currentBuilding.BuildingFootprint, 0f, obstacleLayers).Length > 0)
+        if (!resourceInventory.CanAfford(currentBuilding.ResourceRequirements) ||
+            Physics2D.OverlapBoxAll(position, currentBuilding.BuildingFootprint, 0f, obstacleLayers).Length > 0)
         {
             PlacementValidityChanged.RaiseEvent(PlacementState.Denied);
             
@@ -87,6 +89,11 @@ public class BuildingPlacer : MonoBehaviour
                 return;
             }
 
+            if (!resourceInventory.CanAfford(currentBuilding.ResourceRequirements))
+            {
+                return;
+            }
+
             // Recompute at click time so a mouse move since the last Update can't slip through.
             Vector2 clickPosition = GetMouseWorldPosition();
 
@@ -98,11 +105,17 @@ public class BuildingPlacer : MonoBehaviour
                     currentBuilding.ProductionData.ResourceData,
                     out ResourceNode resourceNode))
                 {
-                    BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition, resourceNode);
+                    if (resourceInventory.TrySpend(currentBuilding.ResourceRequirements))
+                    {
+                        BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition, resourceNode);
+                    }
                 }
                 else
                 {
-                    BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition);
+                    if (resourceInventory.TrySpend(currentBuilding.ResourceRequirements))
+                    {
+                        BuildingFactory.Instance.CreateBuilding(currentBuilding, clickPosition);
+                    }
                 }
             }
         }

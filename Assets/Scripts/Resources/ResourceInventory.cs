@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class ResourceInventory : MonoBehaviour
 {
-    [SerializeField] private ResourceAmoutChanged resourceAmountChanged;
-    [SerializeField] private List<ResourceData> resourceDataList;
+    [SerializeField] private ResourceAmountChanged ResourceAmountChanged;
 
-    private readonly Dictionary<ResourceData, int> amounts = new();
+    [SerializeField] private Dictionary<ResourceData, int> resourceInventory = new();
 
-    private void Awake()
+    private void Start()
     {
-        foreach (var resourceData in resourceDataList)
+        foreach (var (resource, amount) in resourceInventory)
         {
-            amounts[resourceData] = 0;
+            ResourceAmountChanged.RaiseEvent(new ResourceAmontPayload(resource, amount));
         }
     }
 
@@ -21,7 +20,7 @@ public class ResourceInventory : MonoBehaviour
     {
         ValidateResource(resourceData);
 
-        return amounts.TryGetValue(resourceData, out int amount) ? amount : 0;
+        return resourceInventory.TryGetValue(resourceData, out int amount) ? amount : 0;
     }
 
     private static void ValidateResource(ResourceData resourceData)
@@ -39,8 +38,8 @@ public class ResourceInventory : MonoBehaviour
 
         int newTotal = checked(GetAmount(resourceData) + amount);
 
-        amounts[resourceData] = newTotal;
-        resourceAmountChanged.RaiseEvent(new ResourceAmontPayload(resourceData, newTotal));
+        resourceInventory[resourceData] = newTotal;
+        ResourceAmountChanged.RaiseEvent(new ResourceAmontPayload(resourceData, newTotal));
 
         return newTotal;
     }
@@ -53,23 +52,37 @@ public class ResourceInventory : MonoBehaviour
         }
     }
 
-    public bool TrySpendResource(ResourceData resourceData, int amount)
+    public bool CanAfford(IReadOnlyDictionary<ResourceData, int> resourceRequirements)
     {
-        ValidateResource(resourceData);
-        ValidatePositiveAmount(amount);
-
-        int currentAmount = GetAmount(resourceData);
-
-        if (currentAmount < amount)
+        foreach (var (resource, amount) in resourceRequirements)
         {
-            return false;
+            if (GetAmount(resource) < amount)
+            {
+                return false;
+            }
         }
 
-        int newTotal = currentAmount - amount;
-        amounts[resourceData] = newTotal;
-
-        resourceAmountChanged.RaiseEvent(new ResourceAmontPayload(resourceData, newTotal));
-
         return true;
+    }
+
+    public bool TrySpend(IReadOnlyDictionary<ResourceData, int> resourceRequirements)
+    {
+        if (CanAfford(resourceRequirements))
+        {
+            foreach (var (resource, amount) in resourceRequirements)
+            {
+                SetAmount(resource, GetAmount(resource) - amount);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void SetAmount(ResourceData resource, int newAmount)
+    {
+        resourceInventory[resource] = newAmount;
+        ResourceAmountChanged.RaiseEvent(new ResourceAmontPayload(resource, newAmount));
     }
 }

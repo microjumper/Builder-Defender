@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class BuildingUI : MonoBehaviour
 {
+    [SerializeField] private ResourceInventory resourceInventory;
+    [SerializeField] private ResourceAmountChanged ResourceAmountChanged;
     [SerializeField] private BuildingData buildingData;
     [SerializeField] private BuildingSelected buildingSelected;
 
@@ -16,7 +18,26 @@ public class BuildingUI : MonoBehaviour
         buildingImage.sprite = buildingData.BuildingSprite;
         buildingHotkey.text = buildingData.BuildingHotkey.ToString();
 
-        //buildingButton.interactable = false;
+        buildingButton.interactable = false;
+    }
+
+    private void OnEnable() => ResourceAmountChanged.EventRaised += OnResourceAmountChanged;
+
+    private void OnDisable() => ResourceAmountChanged.EventRaised -= OnResourceAmountChanged;
+
+    private void OnResourceAmountChanged(ResourceAmontPayload payload)
+    {
+        if (buildingData.ResourceRequirements.ContainsKey(payload.ResourceData))
+        {
+            if (resourceInventory.CanAfford(buildingData.ResourceRequirements))
+            {
+                buildingButton.interactable = true;
+            }
+            else
+            {
+                buildingButton.interactable = false;
+            }
+        }
     }
 
     public void OnClick()

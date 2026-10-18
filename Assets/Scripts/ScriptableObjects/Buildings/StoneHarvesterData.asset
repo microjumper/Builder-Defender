@@ -17,6 +17,9 @@ MonoBehaviour:
   buildingVisual: {fileID: 5191442329625139610, guid: 5b8b424b62a151c4f9620c86dacc2b1f, type: 3}
   buildingHotkey: 33
   productionData: {fileID: 11400000, guid: b21666386b5be404ba04a3765ebb6f6f, type: 2}
+  resourceRequirements:
+  - key: {fileID: 11400000, guid: 52abb73ae3f89d54f8f4ab4facb420a7, type: 2}
+    value: 10
   buildingFootprint: {x: 6, y: 5}
-  detectionRadius: 3
+  detectionDistance: 3
   requiresNearbyResource: 1
