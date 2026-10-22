@@ -11,16 +11,9 @@ public class Health : MonoBehaviour, IDamageable
     
     private int currentHealth;
 
-    private void Start()
+    private void Awake()
     {
         currentHealth = maxHealth;
-
-        InvokeRepeating(nameof(ApplyDamage), 1f, 1f);
-    }
-
-    private void ApplyDamage()  // temporary for testing
-    {
-        TakeDamage(10);
     }
 
     public void TakeDamage(int amount)
