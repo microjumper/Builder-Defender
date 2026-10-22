@@ -7,26 +7,31 @@ using UnityEngine.InputSystem;
 public class BuildingData : ScriptableObject
 {
     [SerializeField] private string buildingName;
+    public string BuildingName => buildingName;
+
     [SerializeField] private Sprite buildingSprite;
+    public Sprite BuildingSprite => buildingSprite;
+
     [SerializeField] private GameObject buildingVisual;
+    public GameObject BuildingVisual => buildingVisual;
+
     [SerializeField] private Key buildingHotkey;
+    public Key BuildingHotkey => buildingHotkey;
+
     [SerializeField] private ProductionData productionData;
+    public ProductionData ProductionData => productionData;
+
     [SerializeField] private Dictionary<ResourceData, int> resourceRequirements = new();
+    public ReadOnlyDictionary<ResourceData, int> ResourceRequirements => new(resourceRequirements);
+    
     [SerializeField] private Vector2 buildingFootprint = new (9, 8);
+    public Vector2 BuildingFootprint => buildingFootprint;
 
     [Header("Gathering")]
     [SerializeField, Min(0f)] private float detectionDistance = 3f;
+    public float DetectionDistance => detectionDistance;
     [Tooltip("If true, building only produces when a matching ResourceNode is within this radius. Idle otherwise.")]
     [SerializeField] private bool requiresNearbyResource = true;
-
-    public string BuildingName => buildingName;
-    public Sprite BuildingSprite => buildingSprite;
-    public GameObject BuildingVisual => buildingVisual;
-    public Key BuildingHotkey => buildingHotkey;
-    public ProductionData ProductionData => productionData;
-    public Vector2 BuildingFootprint => buildingFootprint;
-    public ReadOnlyDictionary<ResourceData, int> ResourceRequirements => new(resourceRequirements);
-    public float DetectionDistance => detectionDistance;
     public bool RequiresNearbyResource => requiresNearbyResource;
 
     public Rect ReachArea(Vector2 center)
